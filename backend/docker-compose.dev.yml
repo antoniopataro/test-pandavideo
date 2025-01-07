@@ -1,0 +1,42 @@
+networks:
+  default:
+    driver: bridge
+    name: test-pandavideo
+
+services:
+  backend:
+    build:
+      context: ./
+      dockerfile: dockerfile.dev
+    container_name: test-pandavideo-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./.env
+    hostname: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+  db:
+    container_name: test-pandavideo-db
+    env_file:
+      - ./.env
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 12s
+      timeout: 24s
+    hostname: db
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - test-pandavideo-db:/var/lib/postgresql/data
+
+version: "3.7"
+
+volumes:
+  test-pandavideo-db:
