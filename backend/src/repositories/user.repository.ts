@@ -1,4 +1,4 @@
-import { UserEntity } from "@/domain/entities/user.entity";
+import { UserEntity } from "@/entities/user.entity";
 import { PrismaClient } from "@prisma/client";
 
 export type UserCreateAttributes = {

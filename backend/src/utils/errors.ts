@@ -1,19 +1,40 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { StatusCode } from "@/constants";
 
-export abstract class BaseError extends Error {
-  public abstract statusCode: StatusCode;
+export class BaseError extends Error {
+  public statusCode: StatusCode;
 
-  constructor(message: string, data?: any) {
-    super(message, data);
+  constructor(
+    message: string,
+    statusCode: StatusCode = StatusCode.INTERNAL_SERVER_ERROR,
+  ) {
+    super(message);
+
+    this.statusCode = statusCode;
+  }
+}
+
+//
+
+export class BadRequestError extends BaseError {
+  public statusCode = StatusCode.BAD_REQUEST;
+
+  constructor(message: string) {
+    super(message);
   }
 }
 
 export class ConflictError extends BaseError {
   public statusCode = StatusCode.CONFLICT;
 
-  constructor(message: string, data?: any) {
-    super(message, data);
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class InternalServerError extends BaseError {
+  public statusCode = StatusCode.INTERNAL_SERVER_ERROR;
+
+  constructor(message: string) {
+    super(message);
   }
 }

@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { envs } from "@/config/envs";
 
-import { UserEntity } from "@/domain/entities/user.entity";
+import { UserEntity } from "@/entities/user.entity";
 
 export const jwtMiddleware = (
   req: Request,
