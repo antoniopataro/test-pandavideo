@@ -1,3 +1,5 @@
+import bcrypt from "bcryptjs";
+
 type UserEntityAttributes = {
   created_at: Date;
   email: string;
@@ -37,6 +39,10 @@ export class UserEntity {
     this.name = name;
     this.password = password;
     this.updated_at = updated_at;
+  }
+
+  public async comparePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password, this.password);
   }
 
   public toJWT(): UserEntityJWT {

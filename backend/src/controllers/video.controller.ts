@@ -5,12 +5,13 @@ import { ErrorService } from "@/services/error.service";
 import { PandaVideoService } from "@/services/panda-video.service";
 import { PandaVideoAPI } from "@/services/panda-video/panda-video.api";
 import { VideoValidator } from "@/validators/video.validator";
+import { App } from "@/app";
 
 export class VideoController {
   private readonly pandaVideoService: PandaVideoService;
   private readonly videoValidator: VideoValidator;
 
-  constructor() {
+  constructor(private readonly app: App) {
     this.pandaVideoService = new PandaVideoService(new PandaVideoAPI());
     this.videoValidator = new VideoValidator();
   }
@@ -24,7 +25,10 @@ export class VideoController {
       const data = this.videoValidator.validateListVideos(query);
       const { limit, page, status, title } = data;
 
-      const listVideosCommand = new ListVideosCommand(this.pandaVideoService);
+      const listVideosCommand = new ListVideosCommand(
+        this.pandaVideoService,
+        this.app.redis,
+      );
 
       const result = await listVideosCommand.execute({
         limit: parseInt(limit, 10),

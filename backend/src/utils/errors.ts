@@ -38,3 +38,19 @@ export class InternalServerError extends BaseError {
     super(message);
   }
 }
+
+export class NotFoundError extends BaseError {
+  public statusCode = StatusCode.NOT_FOUND;
+
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class UnauthorizedError extends BaseError {
+  public statusCode = StatusCode.UNAUTHORIZED;
+
+  constructor(message: string) {
+    super(message);
+  }
+}

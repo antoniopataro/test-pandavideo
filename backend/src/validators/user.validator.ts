@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { Validator } from ".";
 
-const validateRegisterUserSchema = z.object({
+const validateLoginUserSchema = z.object({
   email: z
     .string({ message: "missing email" })
     .min(1, "invalid email length")
@@ -13,7 +13,17 @@ const validateRegisterUserSchema = z.object({
     .min(1, "invalid password length"),
 });
 
+const validateRegisterUserSchema = validateLoginUserSchema;
+
 export class UserValidator extends Validator {
+  public validateLoginUser(data: any): z.infer<typeof validateLoginUserSchema> {
+    try {
+      return validateLoginUserSchema.parse(data);
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   public validateRegisterUser(
     data: any,
   ): z.infer<typeof validateRegisterUserSchema> {

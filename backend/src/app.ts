@@ -5,17 +5,20 @@ import { PrismaClient } from "@prisma/client";
 import { logger } from "./utils/logger";
 import { jsonMiddleware } from "./middlewares/json.middleware";
 import { corsMiddleware } from "./middlewares/cors.middleware";
+import { RedisService } from "./services/redis.service";
 
 export class App {
   private readonly port: string;
 
   public readonly database: PrismaClient;
+  public readonly redis: RedisService;
   public readonly server: Express;
 
   constructor() {
-    this.database = new PrismaClient();
-
     this.port = envs.SERVER_PORT;
+
+    this.database = new PrismaClient();
+    this.redis = new RedisService();
     this.server = express();
 
     this.setupMiddlewares();

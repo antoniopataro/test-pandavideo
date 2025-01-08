@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import {
   PandaVideoListVideosRequestParams,
   PandaVideoListVideosResponse,
-} from "./panda-video.types";
+} from "./panda-video.api.types";
 import { envs } from "@/config/envs";
 import { BaseError } from "@/utils/errors";
 

@@ -8,7 +8,7 @@ export class VideoRouter {
 
   constructor(private readonly app: App) {
     this.router = Router();
-    this.videoController = new VideoController();
+    this.videoController = new VideoController(this.app);
 
     this.addRoutes();
 

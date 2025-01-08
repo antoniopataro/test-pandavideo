@@ -1,15 +1,14 @@
 import { VideoEntity } from "@/entities/video.entity";
 import { PandaVideoAPI } from "./panda-video/panda-video.api";
-import { PandaVideoListVideosRequestParams } from "./panda-video/panda-video.types";
+import { PandaVideoListVideosRequestParams } from "./panda-video/panda-video.api.types";
+import { PandaVideoListVideosResponse } from "./panda-video/panda-video.service.types";
 
 export class PandaVideoService {
   constructor(private readonly pandaVideoAPI: PandaVideoAPI) {}
 
-  public async listVideos(params: PandaVideoListVideosRequestParams): Promise<{
-    pages: number;
-    total: number;
-    videos: VideoEntity[];
-  }> {
+  public async listVideos(
+    params: PandaVideoListVideosRequestParams,
+  ): Promise<PandaVideoListVideosResponse> {
     const listVideosResponse = await this.pandaVideoAPI.listVideos(params);
 
     const { data } = listVideosResponse;

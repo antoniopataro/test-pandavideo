@@ -16,6 +16,10 @@ export class UserRouter {
   }
 
   private addRoutes(): void {
+    this.router.post("/login", (req, res) =>
+      this.userController.login(req, res),
+    );
+
     this.router.post("/register", (req, res) =>
       this.userController.register(req, res),
     );
