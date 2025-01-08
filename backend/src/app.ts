@@ -1,7 +1,10 @@
 import express, { Express } from "express";
 import { envs } from "./config/envs";
-import { Routes } from "./routes";
+import { Router } from "./routers";
 import { PrismaClient } from "@prisma/client";
+import { logger } from "./utils/logger";
+import { jsonMiddleware } from "./middlewares/json.middleware";
+import { corsMiddleware } from "./middlewares/cors.middleware";
 
 export class App {
   private readonly port: string;
@@ -14,19 +17,23 @@ export class App {
 
     this.port = envs.SERVER_PORT;
     this.server = express();
+
+    this.setupMiddlewares();
+    this.setupRoutes();
   }
 
   public listen(): void {
     this.server.listen(this.port, () => {
-      console.log(`server is running on port ${this.port}`);
+      logger.info(`server is running on port ${this.port}`);
     });
   }
 
-  public setupMiddlewares(): void {
-    this.server.use(express.json());
+  private setupMiddlewares(): void {
+    this.server.use(corsMiddleware);
+    this.server.use(jsonMiddleware);
   }
 
-  public setupRoutes(): void {
-    new Routes(this);
+  private setupRoutes(): void {
+    new Router(this);
   }
 }

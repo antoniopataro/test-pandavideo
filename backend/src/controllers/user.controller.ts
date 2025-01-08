@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { App } from "../app";
 import { UserRepository } from "@/repositories/user.repository";
-import { RegisterUserCommand } from "@/use-cases/register-user.command";
+import { RegisterUserCommand } from "@/domain/use-cases/register-user.command";
+import { StatusCode } from "@/constants";
+import { ErrorService } from "@/services/error.service";
 
 export class UserController {
   private readonly userRepository: UserRepository;
@@ -11,6 +13,8 @@ export class UserController {
   }
 
   public async register(req: Request, res: Response) {
+    const errorService = new ErrorService(res);
+
     try {
       const { email, password } = req.body;
 
@@ -18,14 +22,12 @@ export class UserController {
 
       const result = await registerUserCommand.execute({
         email,
-        name: "test",
+        password,
       });
 
-      res.status(201).send(result);
+      res.status(StatusCode.CREATED).send(result);
     } catch (error) {
-      console.error(error);
-
-      res.status(500).end();
+      errorService.handleError(error);
     }
   }
 }

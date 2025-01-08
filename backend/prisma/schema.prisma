@@ -8,10 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  createdAt DateTime @default(now())
-  email     String   @unique
-  id        String   @id @default(uuid())
-  name      String?
-  updatedAt DateTime @updatedAt
+model User {
+  created_at DateTime @default(now())
+  email      String   @unique
+  id         String   @id @default(uuid())
+  name       String?
+  password   String
+  updated_at DateTime @updatedAt
+
+  @@map("users")
 }
