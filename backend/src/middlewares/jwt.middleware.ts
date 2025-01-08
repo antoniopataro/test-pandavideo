@@ -1,4 +1,4 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { envs } from "@/config/envs";
@@ -8,7 +8,7 @@ import { UserEntity } from "@/domain/entities/user.entity";
 export const jwtMiddleware = (
   req: Request,
   res: Response,
-  next?: NextFunction
+  next?: NextFunction,
 ) => {
   const authHeader = req.headers["authorization"];
 

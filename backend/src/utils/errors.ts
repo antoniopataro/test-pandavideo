@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { StatusCode } from "@/constants";
 
 export abstract class BaseError extends Error {
