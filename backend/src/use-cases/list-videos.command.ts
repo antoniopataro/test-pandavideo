@@ -5,8 +5,10 @@ import { RedisService } from "@/services/redis.service";
 import { PandaVideoListVideosResponse } from "@/services/panda-video/panda-video.service.types";
 
 type Params = {
-  limit: number;
-  page: number;
+  folder_id?: string;
+  limit?: number;
+  page?: number;
+  root_folder?: number;
   status?: string;
   title?: string;
 };
@@ -87,9 +89,10 @@ export class ListVideosCommand {
     params: Params,
   ): Promise<PandaVideoListVideosResponse> {
     return await this.pandaVideoService.listVideos({
+      folder_id: params.folder_id,
       limit: params.limit,
       page: params.page,
-      root_folder: 1,
+      root_folder: params.root_folder,
       status: params.status,
       title: params.title,
     });

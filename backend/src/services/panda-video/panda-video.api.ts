@@ -1,8 +1,12 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import {
   PandaVideoGetVideoDetailsResponse,
+  PandaVideoListFoldersRequestParams,
+  PandaVideoListFoldersResponse,
   PandaVideoListVideosRequestParams,
   PandaVideoListVideosResponse,
+  PandaVideoUpdateVideoPropertiesRequestBody,
+  PandaVideoUpdateVideoPropertiesResponse,
 } from "./panda-video.api.types";
 import { envs } from "@/config/envs";
 import { BaseError } from "@/utils/errors";
@@ -20,10 +24,10 @@ export class PandaVideoAPI {
     });
   }
 
-  public async getVideoDetails(video_id: string) {
+  public async getVideoDetails(id: string) {
     try {
       return await this.api.get<PandaVideoGetVideoDetailsResponse>(
-        `/videos/${video_id}`,
+        `/videos/${id}`,
       );
     } catch (error) {
       throw this.handleError(error);
@@ -52,15 +56,35 @@ export class PandaVideoAPI {
     return error;
   }
 
-  public async listVideos(
-    params: PandaVideoListVideosRequestParams = {
-      root_folder: 1,
-    },
-  ) {
+  public async listFolders(params: PandaVideoListFoldersRequestParams) {
+    try {
+      return await this.api.get<PandaVideoListFoldersResponse>("/folders", {
+        params,
+      });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  public async listVideos(params: PandaVideoListVideosRequestParams) {
     try {
       return await this.api.get<PandaVideoListVideosResponse>("/videos", {
         params,
       });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  public async updateVideoProperties(
+    id: string,
+    body: PandaVideoUpdateVideoPropertiesRequestBody,
+  ) {
+    try {
+      return await this.api.put<PandaVideoUpdateVideoPropertiesResponse>(
+        `/videos/${id}`,
+        body,
+      );
     } catch (error) {
       throw this.handleError(error);
     }

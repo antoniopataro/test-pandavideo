@@ -9,7 +9,7 @@ type UserEntityAttributes = {
   updated_at: Date;
 };
 
-type UserEntityJWT = {
+export type UserEntityJWT = {
   createdAt: Date;
   email: string;
   id: string;

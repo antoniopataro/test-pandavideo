@@ -17,13 +17,13 @@ export class GetVideoDetailsCommand {
     try {
       logger.info("GetVideoDetailsCommand initiated");
 
-      const videoDetailsFromPandaVideo =
+      const getVideoDetailsFromPandaVideoResponse =
         await this.getVideoDetailsFromPandaVideo(params);
 
       logger.info("GetVideoDetailsCommand finished");
 
       return {
-        video: videoDetailsFromPandaVideo,
+        video: getVideoDetailsFromPandaVideoResponse,
       };
     } catch (error) {
       logger.info("GetVideoDetailsCommand failed");

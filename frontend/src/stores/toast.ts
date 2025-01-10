@@ -1,7 +1,7 @@
 import { type Module } from "vuex";
 
 export type ToastState = {
-  color: string;
+  color: "error" | "success";
   message: string;
   show: boolean;
   timeout: number;

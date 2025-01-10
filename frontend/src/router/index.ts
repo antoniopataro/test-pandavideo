@@ -10,6 +10,7 @@ import Videos from "../views/videos.vue";
 import Login from "../views/login.vue";
 import Register from "../views/register.vue";
 import Video from "../views/video.vue";
+import Folder from "../views/folder.vue";
 
 const privateRoutes: RouteRecordRaw[] = [
   {
@@ -21,6 +22,12 @@ const privateRoutes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
     name: "Videos",
     path: "/videos",
+  },
+  {
+    component: Folder,
+    meta: { requiresAuth: true },
+    name: "Folder",
+    path: "/folders/:id",
   },
   {
     component: Video,

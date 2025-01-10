@@ -8,6 +8,7 @@
     <v-card class="video-card__card">
       <div class="video-card__media">
         <v-img
+          :aspect-ratio="16 / 9"
           :class="{ 'video-card__media--hidden': isPreviewPlaying }"
           :src="video.thumbnail"
           cover
@@ -70,7 +71,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-width: 384px;
+    width: 100%;
     &__title {
       font-size: 1rem;
       width: 100%;
@@ -79,7 +80,8 @@ export default defineComponent({
   &__link {
     display: flex;
     text-decoration: none;
-    width: fit-content;
+    max-width: 384px;
+    width: 100%;
   }
   &__media {
     height: 192px;

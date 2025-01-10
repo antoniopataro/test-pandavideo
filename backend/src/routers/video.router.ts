@@ -1,5 +1,6 @@
 import { App } from "@/app";
 import { VideoController } from "@/controllers/video.controller";
+import { jwtMiddleware } from "@/middlewares/jwt.middleware";
 import { Router } from "express";
 
 export class VideoRouter {
@@ -7,8 +8,10 @@ export class VideoRouter {
   private readonly videoController: VideoController;
 
   constructor(private readonly app: App) {
-    this.router = Router();
     this.videoController = new VideoController(this.app);
+
+    this.router = Router();
+    this.router.use(jwtMiddleware);
 
     this.addRoutes();
 
@@ -22,6 +25,10 @@ export class VideoRouter {
 
     this.router.get("/:id", (req, res) =>
       this.videoController.getVideoDetails(req, res),
+    );
+
+    this.router.put("/:id", (req, res) =>
+      this.videoController.updateVideoProperties(req, res),
     );
   }
 }

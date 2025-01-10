@@ -2,9 +2,11 @@ import { Service } from ".";
 import { failure, success, type Either } from "../utils/either";
 import {
   type GetVideoDetailsResponse,
+  type ListVideosRequestParams,
   type ListVideosResponse,
+  type UpdateVideoPropertiesRequestParams,
+  type UpdateVideoPropertiesResponse,
 } from "./video.service.types";
-import { type ListVideosRequestParams } from "./video.service.types";
 
 class VideoService extends Service {
   public async getVideoDetails(
@@ -25,7 +27,30 @@ class VideoService extends Service {
   ): Promise<Either<Error, ListVideosResponse>> {
     try {
       const result = await this.api
-        .get<ListVideosResponse>("/videos", { params })
+        .get<ListVideosResponse>("/videos", {
+          params: {
+            description: params.description || undefined,
+            folder_id: params.folder_id || undefined,
+            limit: params.limit,
+            page: params.page,
+            title: params.title || undefined,
+          },
+        })
+        .then(({ data }) => data);
+
+      return success(result);
+    } catch (error) {
+      return failure(this.handleError(error));
+    }
+  }
+
+  public async updateVideoProperties(
+    id: string,
+    body: UpdateVideoPropertiesRequestParams
+  ): Promise<Either<Error, UpdateVideoPropertiesResponse>> {
+    try {
+      const result = await this.api
+        .put<UpdateVideoPropertiesResponse>(`/videos/${id}`, body)
         .then(({ data }) => data);
 
       return success(result);

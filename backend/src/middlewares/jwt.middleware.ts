@@ -1,54 +1,57 @@
-import { NextFunction, Request, Response } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { NextFunction, Request, RequestHandler, Response } from "express";
+import jwt from "jsonwebtoken";
 
 import { envs } from "@/config/envs";
+import { UserEntity, UserEntityJWT } from "@/entities/user.entity";
+import { StatusCode } from "@/constants";
 
-import { UserEntity } from "@/entities/user.entity";
-
-export const jwtMiddleware = (
+export const jwtMiddleware = ((
   req: Request,
   res: Response,
-  next?: NextFunction,
+  next: NextFunction,
 ) => {
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers.authorization;
 
-  if (!authHeader || typeof authHeader !== "string") {
-    return res
-      .json({
-        message: "missing authentication header",
-      })
-      .status(401);
+  if (!authHeader) {
+    return res.status(StatusCode.UNAUTHORIZED).json({
+      message: "missing authentication header",
+    });
   }
 
-  const [, token] = authHeader.split(" ");
+  const [scheme, token] = authHeader.split(" ");
 
-  if (!token) {
-    return res
-      .json({
-        message: "missing authentication token",
-      })
-      .status(401);
+  if (!token || !["Bearer", "JWT"].includes(scheme)) {
+    return res.status(StatusCode.UNAUTHORIZED).json({
+      message: "malformatted authentication header",
+    });
   }
 
   try {
-    const decodedToken = jwt.verify(token, envs.JWT_SECRET);
+    const decodedToken = jwt.verify(token, envs.JWT_SECRET) as UserEntityJWT;
 
-    const { sub } = decodedToken as JwtPayload;
+    req.user = new UserEntity({
+      created_at: decodedToken.createdAt,
+      email: decodedToken.email,
+      id: decodedToken.id,
+      name: decodedToken.name,
+      password: "",
+      updated_at: decodedToken.updatedAt,
+    });
 
-    if (!sub) {
-      return res.status(401).json({ message: "invalid authentication token" });
-    }
+    next();
 
-    const { user } = JSON.parse(sub);
+    return;
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      res.status(StatusCode.UNAUTHORIZED).json({
+        message: "token has expired",
+      });
 
-    req.user = new UserEntity(user);
-
-    if (!next) {
       return;
     }
 
-    next();
-  } catch {
-    return res.status(401).json({ message: "invalid authentication token" });
+    res.status(StatusCode.UNAUTHORIZED).json({
+      message: "invalid authentication token",
+    });
   }
-};
+}) as RequestHandler;

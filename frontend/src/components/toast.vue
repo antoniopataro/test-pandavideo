@@ -15,11 +15,12 @@ import { defineComponent } from "vue";
 import { mapActions, mapState } from "vuex";
 
 import { type State } from "../stores";
+import { type ToastState } from "../stores/toast";
 
 type ComponentState = {
-  color: (state: State) => string;
-  message: (state: State) => string;
-  timeout: (state: State) => number;
+  color: (state: State) => ToastState["color"];
+  message: (state: State) => ToastState["message"];
+  timeout: (state: State) => ToastState["timeout"];
 };
 
 export default defineComponent({

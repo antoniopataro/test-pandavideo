@@ -6,8 +6,8 @@ networks:
 services:
   backend:
     build:
-      context: ./
-      dockerfile: dockerfile.dev
+      context: ./backend/
+      dockerfile: ./dockerfile
     container_name: test-pandavideo-backend
     depends_on:
       db:
@@ -16,9 +16,13 @@ services:
       - ./.env
     hostname: backend
     ports:
-      - "3000:3000"
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 12s
+      timeout: 24s
     volumes:
-      - ./:/app
+      - ./backend:/app
       - /app/node_modules
 
   db:
@@ -31,21 +35,30 @@ services:
       timeout: 24s
     hostname: db
     image: postgres:latest
-    ports:
-      - "5432:5432"
     volumes:
       - test-pandavideo-db:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: ./dockerfile
+    container_name: test-pandavideo-frontend
+    env_file:
+      - ./.env
+    hostname: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   redis:
     container_name: test-pandavideo-redis
     hostname: redis
     image: redis:latest
-    ports:
-      - "6379:6379"
     volumes:
-      - ./scripts/redis/:/etc/redis/
-
-version: "3.7"
+      - test-pandavideo-redis:/data
 
 volumes:
   test-pandavideo-db:
+  test-pandavideo-redis:
