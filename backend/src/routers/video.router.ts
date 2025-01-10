@@ -19,5 +19,9 @@ export class VideoRouter {
     this.router.get("/", (req, res) =>
       this.videoController.listVideos(req, res),
     );
+
+    this.router.get("/:id", (req, res) =>
+      this.videoController.getVideoDetails(req, res),
+    );
   }
 }

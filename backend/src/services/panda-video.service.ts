@@ -6,6 +6,39 @@ import { PandaVideoListVideosResponse } from "./panda-video/panda-video.service.
 export class PandaVideoService {
   constructor(private readonly pandaVideoAPI: PandaVideoAPI) {}
 
+  public async getVideoDetails(video_id: string): Promise<VideoEntity> {
+    const getVideoDetailsResponse =
+      await this.pandaVideoAPI.getVideoDetails(video_id);
+
+    const { data } = getVideoDetailsResponse;
+
+    return new VideoEntity({
+      backup: data.backup,
+      converted_at: data.converted_at,
+      created_at: data.created_at,
+      description: data.description,
+      folder_id: data.folder_id,
+      height: data.height,
+      id: data.id,
+      length: data.length,
+      library_id: data.library_id,
+      live_id: data.live_id,
+      playable: data.playable,
+      playback: data.playback,
+      preview: data.preview,
+      status: data.status,
+      storage_size: data.storage_size,
+      thumbnail: data.thumbnail,
+      title: data.title,
+      updated_at: data.updated_at,
+      user_id: data.user_id,
+      video_external_id: data.video_external_id,
+      video_hls: data.video_hls,
+      video_player: data.video_player,
+      width: data.width,
+    });
+  }
+
   public async listVideos(
     params: PandaVideoListVideosRequestParams,
   ): Promise<PandaVideoListVideosResponse> {

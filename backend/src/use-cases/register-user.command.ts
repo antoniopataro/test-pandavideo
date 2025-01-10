@@ -50,9 +50,9 @@ export class RegisterUserCommand {
   }
 
   private generateToken(user: UserEntity): string {
-    const payloadd = user.toJWT();
+    const payload = user.toJWT();
 
-    return jwt.sign(payloadd, envs.JWT_SECRET);
+    return jwt.sign(payload, envs.JWT_SECRET);
   }
 
   private async guardAgainstExistingUser(params: Params): Promise<void> {

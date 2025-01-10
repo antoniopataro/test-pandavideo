@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import {
+  PandaVideoGetVideoDetailsResponse,
   PandaVideoListVideosRequestParams,
   PandaVideoListVideosResponse,
 } from "./panda-video.api.types";
@@ -17,6 +18,16 @@ export class PandaVideoAPI {
         Authorization: `${envs.PANDA_VIDEO_API_KEY}`,
       },
     });
+  }
+
+  public async getVideoDetails(video_id: string) {
+    try {
+      return await this.api.get<PandaVideoGetVideoDetailsResponse>(
+        `/videos/${video_id}`,
+      );
+    } catch (error) {
+      throw this.handleError(error);
+    }
   }
 
   private handleError(error: unknown): AxiosError | BaseError | unknown {

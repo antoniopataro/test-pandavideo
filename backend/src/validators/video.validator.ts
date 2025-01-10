@@ -3,6 +3,14 @@
 import { z } from "zod";
 import { Validator } from ".";
 
+const validateGetVideoDetailsSchema = z.object({
+  id: z
+    .string({
+      message: "missing id",
+    })
+    .min(1, "invalid id length"),
+});
+
 const validateListVideosSchema = z.object({
   limit: z
     .string({
@@ -19,6 +27,16 @@ const validateListVideosSchema = z.object({
 });
 
 export class VideoValidator extends Validator {
+  public validateGetVideoDetails(
+    data: any,
+  ): z.infer<typeof validateGetVideoDetailsSchema> {
+    try {
+      return validateGetVideoDetailsSchema.parse(data);
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   public validateListVideos(
     data: any,
   ): z.infer<typeof validateListVideosSchema> {

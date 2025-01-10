@@ -1,4 +1,4 @@
-type Video = {
+export type Video = {
   backup: boolean;
   converted_at: string | null;
   created_at: string;
@@ -22,21 +22,4 @@ type Video = {
   video_hls: string;
   video_player: string;
   width: number;
-};
-
-export type PandaVideoGetVideoDetailsResponse = Video;
-
-export type PandaVideoListVideosRequestParams = {
-  folder_id?: string;
-  limit?: number;
-  page?: number;
-  root_folder: number;
-  status?: string;
-  title?: string;
-};
-
-export type PandaVideoListVideosResponse = {
-  pages: number;
-  total: number;
-  videos: Video[];
 };

@@ -6,6 +6,7 @@ import { PandaVideoService } from "@/services/panda-video.service";
 import { PandaVideoAPI } from "@/services/panda-video/panda-video.api";
 import { VideoValidator } from "@/validators/video.validator";
 import { App } from "@/app";
+import { GetVideoDetailsCommand } from "@/use-cases/get-video-details.command";
 
 export class VideoController {
   private readonly pandaVideoService: PandaVideoService;
@@ -14,6 +15,29 @@ export class VideoController {
   constructor(private readonly app: App) {
     this.pandaVideoService = new PandaVideoService(new PandaVideoAPI());
     this.videoValidator = new VideoValidator();
+  }
+
+  public async getVideoDetails(req: Request, res: Response) {
+    const errorService = new ErrorService(res);
+
+    try {
+      const { params } = req;
+
+      const data = this.videoValidator.validateGetVideoDetails(params);
+      const { id } = data;
+
+      const getVideoDetailsCommand = new GetVideoDetailsCommand(
+        this.pandaVideoService,
+      );
+
+      const result = await getVideoDetailsCommand.execute({
+        panda_video_video_id: id,
+      });
+
+      res.status(StatusCode.OK).send(result);
+    } catch (error) {
+      errorService.handleError(error);
+    }
   }
 
   public async listVideos(req: Request, res: Response) {
