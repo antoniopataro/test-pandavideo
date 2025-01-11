@@ -33,6 +33,7 @@ class VideoService extends Service {
             folder_id: params.folder_id || undefined,
             limit: params.limit,
             page: params.page,
+            root_folder: params.root_folder || undefined,
             title: params.title || undefined,
           },
         })

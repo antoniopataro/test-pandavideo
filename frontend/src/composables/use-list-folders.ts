@@ -5,12 +5,32 @@ import {
   type ListFoldersResponse,
 } from "../services/folder.service.types";
 
+type Result = {
+  data: ListFoldersResponse;
+  error: Error | null;
+  loading: boolean;
+};
+
+const cache = new Map<string, Result>();
+
 export const useListFolders = () => {
   const data = ref<ListFoldersResponse | null>(null);
   const error = ref<Error | null>(null);
-  const loading = ref(false);
+  const loading = ref<boolean>(false);
 
   const fetch = async (params: ListFoldersRequestParams) => {
+    const cacheKey = JSON.stringify(params);
+
+    if (cache.has(cacheKey)) {
+      const result = cache.get(cacheKey)!;
+
+      data.value = result.data;
+      error.value = result.error;
+      loading.value = result.loading;
+
+      return;
+    }
+
     data.value = null;
     error.value = null;
     loading.value = true;
@@ -24,8 +44,17 @@ export const useListFolders = () => {
       return;
     }
 
-    data.value = listFoldersResponse.data;
-    loading.value = false;
+    const result: Result = {
+      data: listFoldersResponse.data,
+      error: null,
+      loading: false,
+    };
+
+    cache.set(cacheKey, result);
+
+    data.value = result.data;
+    error.value = result.error;
+    loading.value = result.loading;
   };
 
   return {

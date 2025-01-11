@@ -39,7 +39,9 @@
         class="videos-list__content__header__subtitle"
         v-if="videos.data.value"
       >
-        {{ filteredVideos.length }} video(s) found. ({{ videos.time.value }}ms)
+        {{ filteredVideos.length }} video(s) found. ({{ videos.time.value }}ms{{
+          videos.cached.value ? " - cached" : ""
+        }})
       </span>
       <v-skeleton-loader
         height="14px"
@@ -80,6 +82,15 @@
         v-for="video in filteredVideos"
       />
     </div>
+    <div class="videos-list__content__pagination" v-if="videos.data.value">
+      <v-pagination
+        :length="totalPages"
+        :total-visible="7"
+        @update:model-value="onPageChange"
+        rounded="circle"
+        v-model="currentPage"
+      ></v-pagination>
+    </div>
   </div>
 </template>
 
@@ -105,6 +116,7 @@ type Data = {
       to: string;
     }[];
   };
+  currentPage: number;
   listFoldersParams: ListFoldersRequestParams;
   listVideosParams: ListVideosRequestParams;
 };
@@ -147,6 +159,15 @@ export default defineComponent({
     user() {
       return this.$store.state.userModule.user;
     },
+    totalPages() {
+      if (!this.videos.data.value) {
+        return 0;
+      }
+
+      const total = this.videos.data.value.total;
+
+      return Math.ceil(total / this.listVideosParams.limit);
+    },
   },
   data() {
     return <Data>{
@@ -159,6 +180,7 @@ export default defineComponent({
           },
         ],
       },
+      currentPage: 1,
       listFoldersParams: {
         parent_folder_id: this.folderId,
       },
@@ -166,6 +188,7 @@ export default defineComponent({
         folder_id: this.folderId,
         limit: 20,
         page: 1,
+        root_folder: !this.folderId ? 1 : undefined,
       },
     };
   },
@@ -174,6 +197,10 @@ export default defineComponent({
     fetchListVideosDebounced: debounce(function (this: any) {
       this.videos.fetch(this.listVideosParams);
     }, 300),
+    onPageChange(page: number) {
+      this.listVideosParams.page = page;
+      this.videos.fetch(this.listVideosParams);
+    },
   },
   watch: {
     ["folderId"]: {
@@ -288,6 +315,24 @@ export default defineComponent({
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+    }
+    &__pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 24px;
+      :deep(.v-pagination) {
+        .v-pagination__list {
+          gap: 4px;
+        }
+        .v-pagination__item {
+          border-radius: 50%;
+          height: 32px;
+          min-width: 32px;
+          &--is-active {
+            font-weight: bold;
+          }
+        }
+      }
     }
   }
 }
