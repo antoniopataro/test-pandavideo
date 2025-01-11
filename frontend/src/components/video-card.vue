@@ -80,7 +80,6 @@ export default defineComponent({
   &__link {
     display: flex;
     text-decoration: none;
-    max-width: 384px;
     width: 100%;
   }
   &__media {

@@ -312,8 +312,8 @@ export default defineComponent({
       font-weight: 700;
     }
     &__videos {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 12px;
     }
     &__pagination {
